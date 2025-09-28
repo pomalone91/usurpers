@@ -10,8 +10,19 @@ interface Player {
     userId: string;
     role: Role;
     alive: boolean;
-}
-export type { Player };
+} export type { Player };
+
+export enum GameStatus {
+    RECRUITING,
+    PLAYING,
+    CONCLUDED
+};
+
+interface Game {
+    host_id: number;
+    players: Player[];
+    status: GameStatus;
+} export type { Game };
 
 export function assign_roles(game: Player[]) {
     var players_list: Player[] = game;

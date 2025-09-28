@@ -51,7 +51,7 @@ export function build_player_list_message(players: Player[]) {
     var player_list_message = ''
     const player_count_message = `Player count: ${players.length}\n`;
     for (var i = 0; i < players.length; i++) {
-        player_list_message += `<@${players[i].userId}>, status: ${players[i].alive}, role: ${players[i].role}\n`
+        player_list_message += `<@${players[i].userId}>\n`
     }
     const message = player_count_message + player_list_message;
 
@@ -84,18 +84,55 @@ export function send_pre_game_player_list(message: string, req: Request, res: Re
                             type: MessageComponentTypes.BUTTON,
                             custom_id: `start_button_${req.body.id}`,
                             label: 'Start',
-                            style: ButtonStyleTypes.PRIMARY
+                            style: ButtonStyleTypes.SUCCESS
                         },
-                        // Remove Button
+                        //// Remove Button
+                        //{
+                        //    type: MessageComponentTypes.BUTTON,
+                        //    custom_id: `remove_button_${req.body.id}`,
+                        //    label: 'Remove me',
+                        //    style: ButtonStyleTypes.DANGER
+                        //},
+                        // Bump button
                         {
                             type: MessageComponentTypes.BUTTON,
-                            custom_id: `remove_button_${req.body.id}`,
-                            label: 'Remove me',
-                            style: ButtonStyleTypes.DANGER
+                            custom_id: `bump_button_${req.body.id}`,
+                            label: 'Bump message',
+                            style: ButtonStyleTypes.SECONDARY
                         },
                     ]
                 },
             ]
         },
+    });
+}
+
+export function send_ephemeral_message(message: string, res: Response) {
+    res.send({
+        type: InteractionResponseType.CHANNEL_MESSAGE_WITH_SOURCE,
+        data: {
+            flags: InteractionResponseFlags.EPHEMERAL | InteractionResponseFlags.IS_COMPONENTS_V2,
+            components: [
+                {
+                    type: MessageComponentTypes.TEXT_DISPLAY,
+                    content: message
+                }
+            ]
+        }
+    });
+}
+
+export function send_already_joined_message(res: Response) {
+    res.send({
+        type: InteractionResponseType.CHANNEL_MESSAGE_WITH_SOURCE,
+        data: {
+            flags: InteractionResponseFlags.EPHEMERAL | InteractionResponseFlags.IS_COMPONENTS_V2,
+            components: [
+                {
+                    type: MessageComponentTypes.TEXT_DISPLAY,
+                    content: `You have already joined the game! Use "Remove" to remove yourself.`
+                }
+            ]
+        }
     });
 }
