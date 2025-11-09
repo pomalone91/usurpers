@@ -86,14 +86,6 @@ export function send_pre_game_player_list(message: string, req: Request, res: Re
                             label: 'Start',
                             style: ButtonStyleTypes.SUCCESS
                         },
-                        //// Remove Button
-                        //{
-                        //    type: MessageComponentTypes.BUTTON,
-                        //    custom_id: `remove_button_${req.body.id}`,
-                        //    label: 'Remove me',
-                        //    style: ButtonStyleTypes.DANGER
-                        //},
-                        // Bump button
                         {
                             type: MessageComponentTypes.BUTTON,
                             custom_id: `bump_button_${req.body.id}`,

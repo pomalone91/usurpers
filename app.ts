@@ -172,11 +172,15 @@ app.post('/interactions', verifyKeyMiddleware(process.env.PUBLIC_KEY!), async fu
             const monarch = players.find((player) => player.role === Role.MONARCH);
             const player_count_message = `Player count: ${players.length}\n`;
             const monarch_message = `The game has begun! <@${monarch?.userId}>, you are the monarch!\n\nYour loyal subjects...\n`;
+            const monarch_explanation = '\nThe Monarch and body guard win when the assassins and usurper are defeated';
+            const assassin_explanation = '\nThe assassins win when the monarch dies.';
+            const usurper_explanation = '\nThe usurper wins if they kill the assassins and the monarch';
             for (var i = 0; i < players.length; i++) {
                 if (players[i].role != Role.MONARCH) {
                     player_list_message += `<@${players[i].userId}>\n`;
                 }
             }
+            player_list_message += (monarch_explanation + assassin_explanation + usurper_explanation);
             const end_of_message = '\nClick "Who Am I?" for your role';
             const message = player_count_message + monarch_message + player_list_message + end_of_message;
             try {
