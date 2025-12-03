@@ -3,6 +3,8 @@
 // run ngrok: ngrok http http://localhost:3000
 import 'dotenv/config' // Imports the .env file apparently
 import express from "express"
+import https from "https"
+import fs from "fs"
 import { 
     ButtonStyleTypes,
     InteractionResponseFlags,
@@ -12,10 +14,16 @@ import {
     verifyKeyMiddleware
 } from "discord-interactions"
 import { Role, type Player, assign_roles, Game, GameStatus } from './game.ts'
+import { production_flag } from './config.ts'
 import { DiscordRequest, build_player_list_message, send_ephemeral_message, send_pre_game_player_list, send_already_joined_message } from './utils.js'
 
-const app = express()
+const app = express();
+
+//const https = https();
+//const fs = fs();
+
 const port = 3000
+//const port = 443
 
 // Stuff for the game itself
 var players: Player[] = []; // Array of userId to represent the players who have joined.
@@ -309,7 +317,18 @@ app.post('/interactions', verifyKeyMiddleware(process.env.PUBLIC_KEY!), async fu
     }
 });
 
-// Start listening
-app.listen(port, () => {
-    console.log(`Listening on port ${port}`)
-})
+if (production_flag) {
+    // If we're in production we need to spin up the https server
+    const httpsServer = https.createServer({
+        key: fs.readFileSync('/etc/letsencrypt/live/blogmios.com/privkey.pem'),
+        cert: fs.readFileSync('/etc/letsencrypt/live/blogmios.com/fullchain.pem'),
+    }, app);
+    httpsServer.listen(port, () => {
+        console.log(`Listening on port ${port}`)
+    })
+} else {
+    // If we're in test we can just listen with the app
+    app.listen(port, () => {
+        console.log(`Listening on port ${port}`);
+    })
+}
