@@ -2,9 +2,7 @@
 // register (need to do when adding new commands): npm run register
 // run ngrok: ngrok http http://localhost:3000
 import 'dotenv/config' // Imports the .env file apparently
-import express from "express"
-import https from "https"
-import fs from "fs"
+import { application } from './config.ts'
 import { 
     ButtonStyleTypes,
     InteractionResponseFlags,
@@ -17,11 +15,7 @@ import { Role, type Player, assign_roles, Game, GameStatus } from './game.ts'
 import { production_flag } from './config.ts'
 import { DiscordRequest, build_player_list_message, send_ephemeral_message, send_pre_game_player_list, send_already_joined_message } from './utils.js'
 
-const app = express();
-
-//const https = https();
-//const fs = fs();
-
+const app = application;
 const port = 3000
 //const port = 443
 
